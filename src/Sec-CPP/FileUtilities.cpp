@@ -13,7 +13,7 @@ using namespace Sec_CPP::FileUtilities;
 /**
  * Does this file exist?
  */
-bool fileExists(const std::string &filename) {
+bool Sec_CPP::FileUtilities::fileExists(const std::string &filename) {
     struct stat buf;
     return (stat(filename.c_str(), &buf) == 0);
 }
@@ -21,7 +21,7 @@ bool fileExists(const std::string &filename) {
 /**
  * Read file contents.
  */
-string readFile(const string &filename)
+string Sec_CPP::FileUtilities::readFile(const string &filename)
 {
 	std::ifstream ifs(filename);
     if (!ifs.good()) {
@@ -34,7 +34,7 @@ string readFile(const string &filename)
 /**
  * Read lines from the file, returning one line per entry in the vector.
  */
-Sec_CPP::StringVector readLines(const std::string &filename) {
+Sec_CPP::StringVector Sec_CPP::FileUtilities::readLines(const std::string &filename) {
     Sec_CPP::StringVector vec;
     std::ifstream ifs(filename);
     string line;
@@ -49,7 +49,7 @@ Sec_CPP::StringVector readLines(const std::string &filename) {
 /**
  * Write the contents to the file.
  */
-void writeFile(const string &filename, const string &contents) {
+void Sec_CPP::FileUtilities::writeFile(const string &filename, const string &contents) {
     std::ofstream ofs(filename);
     ofs << contents;
 }

@@ -7,21 +7,23 @@ CONFIG -= qt
 INCLUDEPATH += src
 
 SOURCES += \
-        examples/SimpleExample.cpp \
-        src/FileUtilities.cpp \
-        src/KeyPair.cpp \
-        src/OpenSSL-CPP/BigNum.cpp \
-        src/OpenSSL-CPP/BinaryIO.cpp \
-        src/OpenSSL-CPP/CharacterBuffer.cpp \
-        src/OpenSSL-CPP/RSA.cpp \
-        src/StringVector.cpp
+    src/OpenSSL-CPP/BigNum.cpp \
+    src/OpenSSL-CPP/BinaryIO.cpp \
+    src/OpenSSL-CPP/CharacterBuffer.cpp \
+    src/OpenSSL-CPP/RSA.cpp \
+    src/Sec-CPP/FileUtilities.cpp \
+    src/Sec-CPP/KeyPair.cpp \
+    src/Sec-CPP/Sec_CPP.cpp \
+    src/Sec-CPP/StringVector.cpp \
+    examples/SimpleExample.cpp
 
 HEADERS += \
-    src/CommonUsing.h \
-    src/FileUtilities.h \
-    src/KeyPair.h \
     src/OpenSSL-CPP/BigNum.h \
     src/OpenSSL-CPP/BinaryIO.h \
     src/OpenSSL-CPP/CharacterBuffer.h \
     src/OpenSSL-CPP/RSA.h \
-    src/StringVector.h
+    src/Sec-CPP/CommonUsing.h \
+    src/Sec-CPP/FileUtilities.h \
+    src/Sec-CPP/KeyPair.h \
+    src/Sec-CPP/Sec_CPP.h \
+    src/Sec-CPP/StringVector.h

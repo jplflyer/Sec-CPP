@@ -1,7 +1,7 @@
 #pragma once
 
 #include <openssl/rsa.h>
-#include "KeyPair.h"
+#include <Sec-CPP/KeyPair.h>
 
 #include "BigNum.h"
 
@@ -21,7 +21,7 @@ public:
     ::RSA & operator*() { return *rsa; }
     ::RSA & operator->() { return *rsa; }
 
-    KeyPair generateKey(int bits, Sec_CPP::BigNum &bn);
+    KeyPair generateKey(int bits, BigNum &bn);
 
 protected:
     ::RSA * rsa = nullptr;

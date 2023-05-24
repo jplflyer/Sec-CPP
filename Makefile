@@ -84,7 +84,7 @@ endif
 # Rules.
 #----------------------------------------------------------------------
 TEST_SRC=tests
-VPATH := ${SRCDIR}:${TEST_SRC}:${SRCDIR}/OpenSSL-CPP
+VPATH := ${SRCDIR}/Sec-CPP:${SRCDIR}/OpenSSL-CPP:examples
 
 CXXFLAGS += -I${SRCDIR}
 
@@ -103,7 +103,8 @@ endif
 INSTALL_BASE=/usr/local
 
 
-LDFLAGS += -L. -l${LIBNAME}
+LDFLAGS += -L.
+LIBS += -l${LIBNAME} -lssl -lcrypto
 
 #----------------------------------------------------------------------
 # Clean.
@@ -135,7 +136,6 @@ makelib:
 lib: ${LIB}
 
 ${LIB}: ${OBJ}
-	@mkdir -p lib
 	ar ${LIB_ARGS} ${LIB} ${OBJ}
 	ranlib ${LIB}
 
@@ -148,7 +148,7 @@ directories: ${BINDIR}
 makeprograms:
 	@$(MAKE) ${THREADING_ARG} --output-sync=target --no-print-directory programs
 
-programs:
+programs: ${BINDIR}/SimpleExample
 
 ${BINDIR}/%: ${OBJDIR}/%.o
 	$(CXX) $^ ${LDFLAGS} ${LIB_DIRS} ${LIBS} $(OUTPUT_OPTION)
