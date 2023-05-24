@@ -7,6 +7,7 @@ CONFIG -= qt
 INCLUDEPATH += src
 
 SOURCES += \
+        examples/SimpleExample.cpp \
         src/FileUtilities.cpp \
         src/KeyPair.cpp \
         src/OpenSSL-CPP/BigNum.cpp \
