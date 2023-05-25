@@ -3,6 +3,10 @@
 #----------------------------------------------------------------------
 all: directories makelib makeprograms
 
+help:
+	@echo Make targets: all clean install
+	@echo Secondary Make targets: makelib makeprograms
+
 #----------------------------------------------------------------------
 # A ton of boilerplate copied from ShowLib.
 #----------------------------------------------------------------------
@@ -104,7 +108,7 @@ INSTALL_BASE=/usr/local
 
 
 LDFLAGS += -L.
-LIBS += -l${LIBNAME} -lssl -lcrypto
+LIBS += -l${LIBNAME} -lbcrypt -lssl -lcrypto
 
 #----------------------------------------------------------------------
 # Clean.
@@ -152,3 +156,14 @@ programs: ${BINDIR}/SimpleExample
 
 ${BINDIR}/%: ${OBJDIR}/%.o
 	$(CXX) $^ ${LDFLAGS} ${LIB_DIRS} ${LIBS} $(OUTPUT_OPTION)
+
+#======================================================================
+# Installation
+#======================================================================
+
+install:
+	cp ${LIB} /usr/local/lib
+	mkdir -p /usr/local/lib/OpenSSL-CPP /usr/local/lib/Sec-CPP
+	cp src/OpenSSL-CPP/*.h /usr/local/lib/OpenSSL-CPP
+	cp src/Sec-CPP/*.h /usr/local/lib/Sec-CPP
+

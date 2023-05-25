@@ -7,6 +7,8 @@
 #include <iostream>
 #include <chrono>
 
+#include <bcrypt/BCrypt.hpp>
+
 // CommonUsing just does a few "using std::cout" statements. It's here for
 // convenience only.
 #include <Sec-CPP/CommonUsing.h>
@@ -32,6 +34,7 @@ static void demonstrateJWT();
 static void demonstrateBCrypt();
 
 int main(int, char **) {
+    cout << std::boolalpha;
     demonstrateJWT();
     demonstrateBCrypt();
 }
@@ -171,6 +174,116 @@ void demonstrateJWT() {
     // And there you have it.
 }
 
+/**
+ * This demonstrates use of bcrypt. Note that we don't provide any special code, as
+ * bcrypt is exceedingly easy to use. Let's talk about passwords.
+ *
+ * SAVING PASSWORDS
+ *
+ * Passwords should never be stored in the clear. Instead, they should be stored
+ * in a one-way hash. You then don't verify the PW entered during login is the
+ * same as the one you stored. Instead, you verify that when you use the same hash
+ * algorithm, you get the same hash value. There is an exceedingly small chance that
+ * two different strings will generate the same hash, but that's deemed to be such a
+ * small chance as to be zero.
+ *
+ * This is still not entirely sufficient. You have to assume a dedicated hacker can
+ * download your password table. And there are lookup tables that hackers publish for
+ * each other that give the hash values and the password that generated it, so for a lot
+ * of passwords people use, it's a trivial lookup. So instead, you also use something called
+ * a salt. A salt is randomly generated, and added to the password before hashing. The
+ * output includes the salt used, which sounds insecure, but because they're so random,
+ * it defeats those lookup tables just mentioned.
+ *
+ * With BCrypt.hpp, we don't have to worry to much about that. So here's some
+ * sample code. Note that we have already done #include <bcrypt/BCrypt.hpp>
+ *
+ * SAFE PASSWORDS
+ *
+ * But before the code, let's also talk about quality passwords. Nothing I'm saying
+ * should be new, but maybe it is to some readers.
+ *
+ * Modern password practices are:
+ *
+ * 1. Use a password tool like NordPass, Dashlane, 1Password, LastPass, et cetera.
+ * 2. Let the tool generate long, random passwords. More on this below.
+ * 3. What is most important is length, not crazy characters.
+ *
+ * XKCD years ago pointed out that a password like "donkey ears laid low" is better
+ * than "h3ll0". First off, hackers know all the tricks about using numbers instead
+ * of letters. The idea is to have the greatest number of unlikely bits. You're likely
+ * to remember a sequence of words, but it's much harder to remember a single word with
+ * some strange characters tossed in. But ultimately, it's about length. The most number
+ * of bits.
+ *
+ * PASSWORD MANAGERS
+ *
+ * With modern password tools, you don't even need to remember your passwords. I remember
+ * my password manager's passwords (I use more than one), and I remember my login password
+ * and a few others. But I have a unique password for every site I use, and I don't have a
+ * clue what any of them are. The password manager handles it for me.
+ *
+ * ABOUT WORKLOAD
+ *
+ * BCrypt has been out since the late 90s. Moore's law was well understood, so the algorithm
+ * included a way of making passwords increasingly difficult to crack as computers grew
+ * more capable. This is built into the workload. A workload of 4 means 2^4 cycles, so each
+ * time you increase the workload number by 1, you double the time it takes to hash and
+ * the time to validate a password.
+ *
+ * So periodically, as the machines we're using get faster, we need to increase the workload.
+ * The current default with libbcrypt is 12. I'm using 15 in this example. The idea is that
+ * if you have a lengthy, entirely random password of letters, numbers, digits, and symbols,
+ * that it would take years to crack it via brute force using existing equipment. (The theory
+ * is quantum computers are totally going to screw with this, of course.)
+ *
+ * This number may be too high for your usage. On the other hand, it is probably a little
+ * low if someone gets your password table and starts trying to crack it on a serious
+ * machine.
+ *
+ * MULTI-FACTOR AUTHENTICATION
+ *
+ * Sometimes called 2-factor authentication, 2FA, or MFA, this is an important concept. There
+ * is better reading out there. I'm not going to demonstrate 2FA or MFA. MFA means "2 or more".
+ * The idea is that authentication is based on:
+ *
+ * 1. Something you know (your password)
+ * 2. Something you have (any sort of authentication app or hardware)
+ * 3. Something you are (fingerprint, iris scan, et cetera)
+ *
+ * If your site is critical, you will want to use MFA. You'll need to do more reading
+ * elsewhere to find a solution for your needs. I'm not going to demonstrate it here,
+ * but I thought it was worth mentioning.
+ *
+ * Accepted policy is that 1FA (username and password) is no longer sufficient for access
+ * to corporate resources. Note that many password management tools have 2FA capabilities
+ * built in, and you can get tools like Google Authenticator on your phone.
+ *
+ * THE CODE
+ *
+ * But let's get into the code. I'm using a C++ wrapper as part of libbcrypt.
+ * It handles generating a salt. So the code is very simple.
+ */
 void demonstrateBCrypt() {
+    cout << "\nDemonstrating bcrypt:\n";
+    string originalPW = "this is a random password";
+    string testPw = "this is a a different password";
+    int bcryptWorkload = 15;
 
+    string hashed = BCrypt::generateHash(originalPW, bcryptWorkload);
+    cout << "The password hashed to: " << hashed << endl;
+
+    bool doNotMatch = BCrypt::validatePassword(testPw, hashed);
+    bool pleaseMatch = BCrypt::validatePassword(originalPW, hashed);
+
+    cout << "Verify the wrong pw: " << doNotMatch
+         << ". And the right one: " << pleaseMatch << endl;
+
+    // The above code takes time to run. That's intentional to avoid
+    // brute force attacks. Change bcryptWorkload to 4 and it will run
+    // a whole lot faster. But that's not what you want.
+    //
+    // You can semi-safely store the hashed value in your database and
+    // then forget the original password. Just use the validate code
+    // when you want to verify a password.
 }
