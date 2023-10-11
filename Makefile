@@ -163,7 +163,7 @@ ${BINDIR}/%: ${OBJDIR}/%.o
 
 install:
 	cp ${LIB} /usr/local/lib
-	mkdir -p /usr/local/lib/OpenSSL-CPP /usr/local/lib/Sec-CPP
-	cp src/OpenSSL-CPP/*.h /usr/local/lib/OpenSSL-CPP
-	cp src/Sec-CPP/*.h /usr/local/lib/Sec-CPP
+	mkdir -p /usr/local/include/OpenSSL-CPP /usr/local/include/Sec-CPP
+	cp src/OpenSSL-CPP/*.h /usr/local/include/OpenSSL-CPP
+	cp src/Sec-CPP/*.h /usr/local/include/Sec-CPP
 
